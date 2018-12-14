@@ -2,12 +2,16 @@ package com.csf.sample
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.paging.LivePagedListBuilder
+import androidx.paging.PageKeyedDataSource
 import androidx.paging.PagedList
-import java.util.concurrent.Executors
+import com.csf.paginglibrary.datasource.BasePageKeyDataSource
+import com.csf.paginglibrary.datasource.BasePagingAdapterWrapper
+import com.csf.paginglibrary.datasource.IPageKeyDataSource
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class FeedViewModel : ViewModel() {
-
 
     var articleLiveData: LiveData<PagedList<ProductionItemBean>>? = null
         private set
@@ -17,19 +21,13 @@ class FeedViewModel : ViewModel() {
     }
 
     private fun init() {
-       val  executor = Executors.newFixedThreadPool(5)
+//        articleLiveData = BasePagingAdapterWrapper<Long, ProductionItemBean>().setDataSource(object :
+//            BasePageKeyDataSource<Long, ProductionItemBean>() {
+//
+//        }).dataSourceLiveData
+    }
 
-        val feedDataFactory = FeedDataFactory()
-        //        networkState = Transformations.switchMap(feedDataFactory.getMutableLiveData(),
-        //                dataSource -> dataSource.getNetworkState());
+    fun getProduction() {
 
-        val pagedListConfig = PagedList.Config.Builder()
-                .setEnablePlaceholders(false)
-                .setInitialLoadSizeHint(10)
-                .setPageSize(10).build()
-
-        articleLiveData = LivePagedListBuilder(feedDataFactory, pagedListConfig)
-                .setFetchExecutor(executor!!)
-                .build()
     }
 }
