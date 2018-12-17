@@ -6,6 +6,8 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import java.util.concurrent.TimeUnit;
+
 public class RestApiFactory {
 
     private static String BASE_URL = "https://newsapi.org";
@@ -15,7 +17,10 @@ public class RestApiFactory {
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(logging);
+        httpClient.connectTimeout(20L, TimeUnit.SECONDS)
+                .writeTimeout(20L, TimeUnit.SECONDS)
+                .readTimeout(20L, TimeUnit.SECONDS)
+                .addInterceptor(logging);
 
         Retrofit retrofit = new Retrofit.Builder().baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())

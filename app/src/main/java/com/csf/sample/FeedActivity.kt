@@ -8,57 +8,21 @@ import androidx.lifecycle.Observer
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.csf.sample.databinding.ActivityMainBinding
+import com.csf.sample.model.Article
+import kotlinx.android.synthetic.main.activity_main.*
 
 class FeedActivity : AppCompatActivity() {
 
-    //    private FeedListAdapter adapter;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        /*
-         * Step 1: Using DataBinding, we setup the layout for the activity
-         *
-         * */
-        val binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
+        DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
         val feedViewModel = FeedViewModel()
-        binding.rvTest.layoutManager = LinearLayoutManager(this)
+        rv_test.layoutManager = LinearLayoutManager(this)
         val adapter = FeedListAdapter()
-        feedViewModel.articleLiveData!!.observe(this, Observer<PagedList<ProductionItemBean>> { adapter.submitList(it) })
-        binding.rvTest.adapter = adapter
-        //
-        //        /*
-        //         * Step 2: Initialize the ViewModel
-        //         *
-        //         * */
-        //        FeedViewModel feedViewModel = new FeedViewModel(AppController.create(this));
-        //
-        //        /*
-        //         * Step 2: Setup the adapter class for the RecyclerView
-        //         *
-        //         * */
-        //        binding.listFeed.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        //        adapter = new FeedListAdapter(getApplicationContext());
-        //
-        //
-        //        /*
-        //         * Step 4: When a new page is available, we call submitList() method
-        //         * of the PagedListAdapter class
-        //         *
-        //         * */
-        //        feedViewModel.getArticleLiveData().observe(this, pagedList -> {
-        //            adapter.submitList(pagedList);
-        //        });
-        //
-        //        /*
-        //         * Step 5: When a new page is available, we call submitList() method
-        //         * of the PagedListAdapter class
-        //         *
-        //         * */
-        ////        feedViewModel.getNetworkState().observe(this, networkState -> {
-        ////            adapter.setNetworkState(networkState);
-        ////        });
-        //
-        //        binding.listFeed.setAdapter(adapter);
+        feedViewModel.articleLiveData!!.observe(
+            this,
+            Observer<PagedList<Article>> { adapter.submitList(it) })
+        rv_test.adapter = adapter
     }
 }

@@ -2,7 +2,7 @@ package com.csf.paginglibrary.datasource
 
 import androidx.paging.ItemKeyedDataSource
 
-class BaseItemKeyDataSource<Key, Source>(val recallBack: IItemKeyDataSource<Key, Source>) :
+class BaseItemKeyDataSource<Key, Source>(private val recallBack: IItemKeyDataSource<Key, Source>) :
     ItemKeyedDataSource<Key, Source>() {
     override fun loadInitial(params: LoadInitialParams<Key>, callback: LoadInitialCallback<Source>) {
         recallBack.loadInitial(params, callback)

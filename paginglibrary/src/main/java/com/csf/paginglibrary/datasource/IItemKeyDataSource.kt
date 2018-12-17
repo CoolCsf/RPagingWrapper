@@ -2,7 +2,7 @@ package com.csf.paginglibrary.datasource
 
 import androidx.paging.ItemKeyedDataSource
 
-interface IItemKeyDataSource<Key, Source> : IBaseDataSource<Key, Source> {
+interface IItemKeyDataSource<Key, Source>  {
     fun loadInitial(
         params: ItemKeyedDataSource.LoadInitialParams<Key>,
         callback: ItemKeyedDataSource.LoadInitialCallback<Source>
