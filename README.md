@@ -26,7 +26,7 @@
 
    ```kotlin
    private val pageDataSoure = object :
-       IPageKeyDataSource&lt;Long, Article&gt; {
+       IPageKeyDataSource<Long, Article> {
        override fun loadInitial(
            params: PageKeyedDataSource.LoadInitialParams&lt;Long&gt;,
            callback: PageKeyedDataSource.LoadInitialCallback&lt;Long, Article&gt;
@@ -35,31 +35,31 @@
                //请不要忘了在获取到数据后，对结果进行callBack
                callback.onResult(it, null, initPage + 1) 
            }, {
-               Log.e(&quot;FeedViewModel&quot;, it.message)
+               Log.e("FeedViewModel", it.message)
            }))
        }
    
        override fun loadAfter(
-           params: PageKeyedDataSource.LoadParams&lt;Long&gt;,
-           callback: PageKeyedDataSource.LoadCallback&lt;Long, Article&gt;
+           params: PageKeyedDataSource.LoadParams<Long>,
+           callback: PageKeyedDataSource.LoadCallback<Long, Article>
        ) {
            compositeDisposable.add(getFeed(params.key, params.requestedLoadSize).subscribe({
                //请不要忘了在获取到数据后，对结果进行callBack
                callback.onResult(it, params.key + 1)
            }, {
-               Log.e(&quot;FeedViewModel&quot;, it.message)
+               Log.e("FeedViewModel", it.message)
            }))
        }
    
        override fun loadBefore(
-           params: PageKeyedDataSource.LoadParams&lt;Long&gt;,
-           callback: PageKeyedDataSource.LoadCallback&lt;Long, Article&gt;
+           params: PageKeyedDataSource.LoadParams<Long>,
+           callback: PageKeyedDataSource.LoadCallback<Long, Article>
        ) {
            compositeDisposable.add(getFeed(params.key, params.requestedLoadSize).subscribe({
                //请不要忘了在获取到数据后，对结果进行callBack
                callback.onResult(it, params.key - 1)
            }, {
-               Log.e(&quot;FeedViewModel&quot;, it.message)
+               Log.e("FeedViewModel", it.message)
            }))
        }
    
