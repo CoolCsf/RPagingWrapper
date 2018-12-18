@@ -5,18 +5,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.paging.PageKeyedDataSource
 import androidx.paging.PagedList
-import androidx.paging.PositionalDataSource
-import com.csf.paginglibrary.datasource.*
+import com.csf.paginglibrary.datasource.BasePageKeyDataSource
+import com.csf.paginglibrary.datasource.BasePagingAdapterWrapper
+import com.csf.paginglibrary.datasource.IPageKeyDataSource
 import com.csf.sample.model.Article
-import com.csf.sample.model.Feed
 import io.reactivex.Observable
-import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class FeedViewModel : ViewModel() {
 
@@ -34,43 +30,9 @@ class FeedViewModel : ViewModel() {
     }
 
     private fun init() {
-        articleLiveData =
-                BasePagingAdapterWrapper<Long, Article>().setPageDataSource(BasePageKeyDataSource(object :
-                    IPageKeyDataSource<Long, Article> {
-                    override fun loadInitial(
-                        params: PageKeyedDataSource.LoadInitialParams<Long>,
-                        callback: PageKeyedDataSource.LoadInitialCallback<Long, Article>
-                    ) {
-                        compositeDisposable.add(getFeed(initPage, params.requestedLoadSize).subscribe({
-                            callback.onResult(it, null, initPage + 1)
-                        }, {
-                            Log.e("FeedViewModel", it.message)
-                        }))
-                    }
-
-                    override fun loadAfter(
-                        params: PageKeyedDataSource.LoadParams<Long>,
-                        callback: PageKeyedDataSource.LoadCallback<Long, Article>
-                    ) {
-                        compositeDisposable.add(getFeed(params.key, params.requestedLoadSize).subscribe({
-                            callback.onResult(it, params.key + 1)
-                        }, {
-                            Log.e("FeedViewModel", it.message)
-                        }))
-                    }
-
-                    override fun loadBefore(
-                        params: PageKeyedDataSource.LoadParams<Long>,
-                        callback: PageKeyedDataSource.LoadCallback<Long, Article>
-                    ) {
-                        compositeDisposable.add(getFeed(params.key, params.requestedLoadSize).subscribe({
-                            callback.onResult(it, params.key - 1)
-                        }, {
-                            Log.e("FeedViewModel", it.message)
-                        }))
-                    }
-
-                })).dataSourceLiveData
+        articleLiveData = BasePagingAdapterWrapper<Long, Article>()
+            .setPageDataSource(BasePageKeyDataSource(pageDataSoure))
+            .dataSourceLiveData
     }
 
     private fun getFeed(pageIndex: Long, loadSize: Int): Observable<List<Article>> {
@@ -83,5 +45,42 @@ class FeedViewModel : ViewModel() {
 
     override fun onCleared() {
         compositeDisposable.clear()
+    }
+
+    private val pageDataSoure = object :
+        IPageKeyDataSource<Long, Article> {
+        override fun loadInitial(
+            params: PageKeyedDataSource.LoadInitialParams<Long>,
+            callback: PageKeyedDataSource.LoadInitialCallback<Long, Article>
+        ) {
+            compositeDisposable.add(getFeed(initPage, params.requestedLoadSize).subscribe({
+                callback.onResult(it, null, initPage + 1)
+            }, {
+                Log.e("FeedViewModel", it.message)
+            }))
+        }
+
+        override fun loadAfter(
+            params: PageKeyedDataSource.LoadParams<Long>,
+            callback: PageKeyedDataSource.LoadCallback<Long, Article>
+        ) {
+            compositeDisposable.add(getFeed(params.key, params.requestedLoadSize).subscribe({
+                callback.onResult(it, params.key + 1)
+            }, {
+                Log.e("FeedViewModel", it.message)
+            }))
+        }
+
+        override fun loadBefore(
+            params: PageKeyedDataSource.LoadParams<Long>,
+            callback: PageKeyedDataSource.LoadCallback<Long, Article>
+        ) {
+            compositeDisposable.add(getFeed(params.key, params.requestedLoadSize).subscribe({
+                callback.onResult(it, params.key - 1)
+            }, {
+                Log.e("FeedViewModel", it.message)
+            }))
+        }
+
     }
 }
