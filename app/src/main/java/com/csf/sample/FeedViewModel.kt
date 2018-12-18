@@ -24,30 +24,7 @@ class FeedViewModel : ViewModel() {
     val compositeDisposable by lazy {
         CompositeDisposable()
     }
-
-    init {
-        init()
-    }
-
-    private fun init() {
-        articleLiveData = BasePagingAdapterWrapper<Long, Article>()
-            .setPageDataSource(BasePageKeyDataSource(pageDataSoure))
-            .dataSourceLiveData
-    }
-
-    private fun getFeed(pageIndex: Long, loadSize: Int): Observable<List<Article>> {
-        return AppController.restApi.fetchFeed(
-            query, apiKey, pageIndex, loadSize
-        ).subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .map { it.articles }
-    }
-
-    override fun onCleared() {
-        compositeDisposable.clear()
-    }
-
-    private val pageDataSoure = object :
+    private val pageDataSource = object :
         IPageKeyDataSource<Long, Article> {
         override fun loadInitial(
             params: PageKeyedDataSource.LoadInitialParams<Long>,
@@ -82,5 +59,26 @@ class FeedViewModel : ViewModel() {
             }))
         }
 
+    }
+    init {
+        init()
+    }
+
+    private fun init() {
+        articleLiveData = BasePagingAdapterWrapper<Long, Article>()
+            .setPageDataSource(BasePageKeyDataSource(pageDataSource))
+            .dataSourceLiveData
+    }
+
+    private fun getFeed(pageIndex: Long, loadSize: Int): Observable<List<Article>> {
+        return AppController.restApi.fetchFeed(
+            query, apiKey, pageIndex, loadSize
+        ).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .map { it.articles }
+    }
+
+    override fun onCleared() {
+        compositeDisposable.clear()
     }
 }
