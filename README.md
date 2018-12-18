@@ -28,8 +28,8 @@
    private val pageDataSoure = object :
        IPageKeyDataSource<Long, Article> {
        override fun loadInitial(
-           params: PageKeyedDataSource.LoadInitialParams&lt;Long&gt;,
-           callback: PageKeyedDataSource.LoadInitialCallback&lt;Long, Article&gt;
+           params: PageKeyedDataSource.LoadInitialParams<Long>,
+           callback: PageKeyedDataSource.LoadInitialCallback<Long, Article>
        ) {
            compositeDisposable.add(getFeed(initPage, params.requestedLoadSize).subscribe({
                //请不要忘了在获取到数据后，对结果进行callBack
