@@ -28,6 +28,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation deps.support.appCompat
     implementation deps.kotlin.stdlib
+    implementation deps.kotlin.coroutines
     implementation deps.constraint_layout
     testImplementation deps.junit
     androidTestImplementation 'androidx.test:runner:1.1.1-beta01'
